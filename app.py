@@ -24,5 +24,16 @@ def predict_api():
     # Convert numpy scalar to Python scalar
     return jsonify(output_dict)
 
+@app.route('/predict',methods=['POST'])
+def predict():
+    data=[float(x) for x in request.form.values()]
+    print(data)
+    final_input=np.array(data).reshape(1,-1)
+    print(final_input)
+    output=model.predict(final_input)[0]
+    if(output==1):
+        return render_template("popup.html",prediction_text="Congratulation! The cell type is Benign",prediction_text_second="You are safe")
+    else:
+        return render_template("popup.html",prediction_text="Sorry! The cell type is Malignant",prediction_text_second="You need medicines")
 if __name__=="__main__":
     app.run(debug=True)
